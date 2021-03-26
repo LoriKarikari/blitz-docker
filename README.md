@@ -12,7 +12,7 @@ An example application with various configurations and setups to run Blitz with 
 | prod-only | node:14-stretch-slim |                    584MB |
 | dev-only  | node:14-stretch-slim |                          |
 | complete  |    node:14-alpine    |                          |
-| prod-only |    node:14-alpine    |                          |
+| prod-only |    node:14-alpine    |                    833MB |
 
 ### Build image
 
@@ -35,3 +35,5 @@ Place the `docker-compose` config that you want to use at the root of your appli
 - [x] Use official images
 - [x] Multistage builds
 - [x] Non-root `node` user
+- [x] Always combine `apt-get update` with `apt-get install` in the same `RUN` statement
+- [x] No dev dependencies in production image
