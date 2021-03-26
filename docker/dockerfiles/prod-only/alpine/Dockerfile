@@ -3,30 +3,35 @@ FROM node:14-alpine as base
 ARG DATABASE_URL
 ENV NODE_ENV=production
 ENV PATH /home/node/app/node_modules/.bin:$PATH
+ENV TINI_VERSION v0.19.0
 EXPOSE 3000
-RUN mkdir /app
-WORKDIR /app
-RUN apk upgrade --update-cache --available && \
-	apk add openssl && \
-	rm -rf /var/cache/apk/*
-COPY package*.json ./
-
+WORKDIR /home/node/app
+RUN apk add --no-cache make g++ python libsodium-dev openssl libtool autoconf automake \ 
+	&& rm -rf /var/cache/apk/* \
+	&& chown -R node:node /home/node/app
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+USER node
+COPY --chown=node:node package*.json yarn.lock* ./
+RUN yarn config list && yarn install --frozen-lockfile && yarn cache clean --force
 
 # create a build image
-FROM base as pre-prod
-COPY . .
-RUN yarn install --frozen-lockfile
-RUN npx next telemetry disable && npx blitz prisma generate && npx blitz build
+FROM base as build
+ENV NODE_ENV=development
+ENV DATABASE_URL=$DATABASE_URL
+COPY --chown=node:node . .
+RUN yarn config list && yarn install && yarn cache clean --force \ 
+	&&blitz prisma migrate deploy --preview-feature \
+	&& blitz prisma generate && blitz build
+USER node
 
 # create a production image
-FROM node:14-alpine as prod
-RUN mkdir /app
-WORKDIR /app
-RUN apk upgrade --update-cache --available && \
-	apk add openssl && \
-	rm -rf /var/cache/apk/*
-COPY --from=pre-prod /app/public ./public
-COPY --from=pre-prod /app/.next ./.next
-COPY --from=pre-prod /app/node_modules ./node_modules
+FROM base as prod
+ENV NODE_ENV=production
+COPY --chown=node:node --from=build /home/node/app/public /home/node/app/public
+COPY --chown=node:node --from=build /home/node/app/.blitz /home/node/app/.blitz
+COPY --chown=node:node --from=build /home/node/app/db /home/node/app/db
+ENTRYPOINT ["/tini", "--"]
 EXPOSE 3000
-CMD ["node_modules/.bin/next", "start"]
+CMD blitz prisma generate && blitz start
+USER node
