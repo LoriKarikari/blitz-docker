@@ -11,7 +11,7 @@ An example application with various configurations and setups to run Blitz with 
 | complete  | node:14-stretch-slim | see below for each stage |
 | prod-only | node:14-stretch-slim |                    584MB |
 | dev-only  | node:14-stretch-slim |                          |
-| complete  |    node:14-alpine    |                          |
+| complete  |    node:14-alpine    | See below for each stage |
 | prod-only |    node:14-alpine    |                    833MB |
 
 ### Build image
