@@ -1,0 +1,14 @@
+.git/
+.gitignore
+**/.gitkeep
+**/.DS_Store
+.next/
+.blitz/
+.dockerignore
+**/docker-compose.yml
+**/Dockerfile
+node_modules/
+README.md
+coverage/
+*logs
+npm-debug.log

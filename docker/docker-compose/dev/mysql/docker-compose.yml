@@ -1,0 +1,29 @@
+---
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      target: dev
+    env_file: .env.local
+    environment:
+      - NODE_ENV=development
+    ports:
+      - 3000:3000
+    command: bash -c 'while !</dev/tcp/mysql/3306; do sleep 1; done; blitz db migrate && blitz start'
+    depends_on:
+      - mysql
+    volumes:
+      - .:/app
+
+  mysql:
+    image: mysql:8.0
+    env_file: ./.env.local
+    volumes:
+      - db-data:/var/lib/mysql/data
+    ports:
+      - 3306:3306
+    restart: unless-stopped
+
+volumes:
+  db-data:

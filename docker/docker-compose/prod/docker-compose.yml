@@ -1,0 +1,10 @@
+---
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      target: prod
+    env_file: .env.production.local
+    ports:
+     - 3000:3000
