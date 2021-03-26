@@ -31,7 +31,7 @@ Place the `docker-compose` config that you want to use at the root of your appli
 
 ## Best Practices
 
-[x] Explicit image reference, avoid `latest` tag
-[x] Use official images
-[x] Multistage builds
-[x] Non-root `node` user
+- [x] Explicit image reference, avoid `latest` tag
+- [x] Use official images
+- [x] Multistage builds
+- [x] Non-root `node` user
