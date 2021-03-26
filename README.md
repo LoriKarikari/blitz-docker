@@ -26,10 +26,10 @@ docker build . -t "IMAGE_NAME:TAG" --build-arg DATABASE_URL="postgresql://user:p
 
 Place the `docker-compose` config that you want to use at the root of your application.
 
-[] Dev with MySQL
-[] Dev with PostgreSQL
-[] Prod with remote database (managed on DO, AWS, Heroku etc.)
-[] Prod with local database
+- [ ] Dev with MySQL
+- [ ] Dev with PostgreSQL
+- [ ] Prod with remote database (managed on DO, AWS, Heroku etc.)
+- [ ] Prod with local database
 
 ## Best Practices
 
