@@ -22,12 +22,13 @@ Place the `Dockerfile` that you want to use at the root of your application and 
 docker build . -t "IMAGE_NAME:TAG" --build-arg DATABASE_URL="postgresql://user:password@host:port/db?sslmode=require&pgbouncer=true"
 ```
 
-## Local Environments
+## Docker Compose
 
 Place the `docker-compose` config that you want to use at the root of your application.
 
-- with MySQL
-- with PostgreSQL
+- Dev with MySQL
+- Dev with PostgreSQL
+- Prod with remote database (managed on DO, AWS, Heroku etc.)
 
 ## Best Practices
 
