@@ -42,3 +42,4 @@ COPY --chown=node:node --from=build /home/node/app/.blitz /home/node/app/.blitz
 COPY --chown=node:node --from=build /home/node/app/db /home/node/app/db
 EXPOSE 3000
 ENTRYPOINT ["/tini", "--"]
+CMD blitz prisma generate && blitz start
