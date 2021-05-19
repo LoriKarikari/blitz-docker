@@ -1,5 +1,5 @@
 # create a standard base image that has all the defaults
-FROM node:14-stretch-slim AS base
+FROM node:14-stretch-slim as base
 ARG DATABASE_URL
 ENV NODE_ENV=production
 ENV PATH /home/node/app/node_modules/.bin:$PATH
