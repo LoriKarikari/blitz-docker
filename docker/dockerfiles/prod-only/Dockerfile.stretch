@@ -12,7 +12,7 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 RUN chmod +x /tini
 USER node
 COPY --chown=node:node package*.json yarn.lock* ./
-RUN yarn config list && yarn install --frozen-lockfile && yarn cache clean --force
+RUN yarn config list && yarn install --frozen-lockfile --production && yarn cache clean --force
 
 # create a build image
 FROM base as build
@@ -28,9 +28,12 @@ RUN yarn config list && yarn install && yarn cache clean --force \
 FROM base as prod
 ENV NODE_ENV=production
 USER node
-COPY --chown=node:node --from=build /home/node/app/public /home/node/app/public
-COPY --chown=node:node --from=build /home/node/app/.blitz /home/node/app/.blitz
-COPY --chown=node:node --from=build /home/node/app/db /home/node/app/db
+RUN rm -rf rm -rf node_modules/prisma \
+	&& rm -rf node_modules/@prisma/engines
+COPY --chown=node:node --from=build ./public ./
+COPY --chown=node:node --from=build ./.blitz ./
+COPY --chown=node:node --from=build ./db ./
+COPY --chown=node:node --from=build ./blitz.config.js ./blitz.config.js
 EXPOSE 3000
 ENTRYPOINT ["/tini", "--"]
 CMD blitz prisma generate && blitz start
