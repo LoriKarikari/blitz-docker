@@ -12,3 +12,4 @@ README.md
 coverage/
 *logs
 npm-debug.log
+docker
