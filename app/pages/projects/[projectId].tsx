@@ -1,5 +1,5 @@
 import { Suspense } from "react"
-import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation } from "blitz"
+import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getProject from "app/projects/queries/getProject"
 import deleteProject from "app/projects/mutations/deleteProject"
@@ -20,7 +20,7 @@ export const Project = () => {
         <h1>Project {project.id}</h1>
         <pre>{JSON.stringify(project, null, 2)}</pre>
 
-        <Link href={`/projects/${project.id}/edit`}>
+        <Link href={Routes.EditProjectPage({ projectId: project.id })}>
           <a>Edit</a>
         </Link>
 
@@ -29,7 +29,7 @@ export const Project = () => {
           onClick={async () => {
             if (window.confirm("This will be deleted")) {
               await deleteProjectMutation({ id: project.id })
-              router.push("/projects")
+              router.push(Routes.ProjectsPage())
             }
           }}
           style={{ marginLeft: "0.5rem" }}
@@ -45,7 +45,7 @@ const ShowProjectPage: BlitzPage = () => {
   return (
     <div>
       <p>
-        <Link href="/projects">
+        <Link href={Routes.ProjectsPage()}>
           <a>Projects</a>
         </Link>
       </p>

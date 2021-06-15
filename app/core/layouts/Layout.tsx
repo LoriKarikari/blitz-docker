@@ -10,7 +10,7 @@ const Layout = ({ title, children }: LayoutProps) => {
   return (
     <>
       <Head>
-        <title>{title || "blitz-docker"}</title>
+        <title>{title || "Blitz Docker"}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

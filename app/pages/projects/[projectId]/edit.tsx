@@ -1,5 +1,5 @@
 import { Suspense } from "react"
-import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage } from "blitz"
+import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getProject from "app/projects/queries/getProject"
 import updateProject from "app/projects/mutations/updateProject"
@@ -35,7 +35,7 @@ export const EditProject = () => {
                 ...values,
               })
               await setQueryData(updated)
-              router.push(`/projects/${updated.id}`)
+              router.push(Routes.ShowProjectPage({ projectId: updated.id }))
             } catch (error) {
               console.error(error)
               return {
@@ -57,7 +57,7 @@ const EditProjectPage: BlitzPage = () => {
       </Suspense>
 
       <p>
-        <Link href="/projects">
+        <Link href={Routes.ProjectsPage()}>
           <a>Projects</a>
         </Link>
       </p>

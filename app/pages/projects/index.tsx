@@ -1,5 +1,5 @@
 import { Suspense } from "react"
-import { Head, Link, usePaginatedQuery, useRouter, BlitzPage } from "blitz"
+import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getProjects from "app/projects/queries/getProjects"
 
@@ -22,7 +22,7 @@ export const ProjectsList = () => {
       <ul>
         {projects.map((project) => (
           <li key={project.id}>
-            <Link href={`/projects/${project.id}`}>
+            <Link href={Routes.ShowProjectPage({ projectId: project.id })}>
               <a>{project.name}</a>
             </Link>
           </li>
@@ -48,7 +48,7 @@ const ProjectsPage: BlitzPage = () => {
 
       <div>
         <p>
-          <Link href="/projects/new">
+          <Link href={Routes.NewProjectPage()}>
             <a>Create Project</a>
           </Link>
         </p>
