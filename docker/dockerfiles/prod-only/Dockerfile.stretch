@@ -12,34 +12,28 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 RUN chmod +x /tini
 USER node
 COPY --chown=node:node package*.json yarn.lock* ./
-RUN yarn config list && yarn install --frozen-lockfile && yarn cache clean --force
-
-# create a development image
-FROM base as dev
-ENV NODE_ENV=development
-USER node
-RUN yarn config list && yarn install && yarn cache clean --force
-
-# create a testing image
-FROM dev as test
-ENV NODE_ENV=development
-USER node
-COPY --chown=node:node . .
-CMD blitz lint; blitz test
+RUN yarn config list && yarn install --frozen-lockfile --production && yarn cache clean --force
 
 # create a build image
-FROM test as build
-ENV NODE_ENV=production
+FROM base as build
+ENV NODE_ENV=development
 ENV DATABASE_URL=$DATABASE_URL
 USER node
-RUN blitz prisma migrate deploy --preview-feature && blitz prisma generate && blitz build
+COPY --chown=node:node . .
+RUN yarn config list && yarn install && yarn cache clean --force \
+	&& blitz prisma migrate deploy --preview-feature \
+	&& blitz prisma generate && blitz build
 
 # create a production image
 FROM base as prod
 ENV NODE_ENV=production
 USER node
-COPY --chown=node:node --from=build /home/node/app/.blitz /home/node/app/.blitz
-COPY --chown=node:node --from=build /home/node/app/db /home/node/app/db
+RUN rm -rf rm -rf node_modules/prisma \
+	&& rm -rf node_modules/@prisma/engines
+COPY --chown=node:node --from=build ./public ./
+COPY --chown=node:node --from=build ./.blitz ./
+COPY --chown=node:node --from=build ./db ./
+COPY --chown=node:node --from=build ./blitz.config.js ./blitz.config.js
 EXPOSE 3000
 ENTRYPOINT ["/tini", "--"]
 CMD blitz prisma generate && blitz start
